@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+ <mapper namespace="Category">
+ 
+ 	<resultMap type="category" id="categoryResult">
+		<result property="blogId" column="BLOG_ID"/>
+		<result property="categoryId" column="CATEGORY_ID"/>
+		<result property="categoryName" column="CATEGORY_NAME"/>
+		<result property="displayType" column="DISPLAY_TYPE"/>
+		<result property="description" column="DESCRIPTION"/>
+		<result property="createdDate" column="CREATED_DATE"/>
+		<result property="modifiedDate" column="MODIFIED_DATE"/>
+	</resultMap>
+
+ 	<insert id="insertCategory">
+		insert into category(blog_id, category_id, category_name, display_type, description, created_date, modified_date) 
+		values(
+			#{blogId},
+			(select nvl(max(category_id), 0) + 1 from category),
+			#{categoryName},
+			#{displayType},
+			#{description},
+			sysdate,
+			sysdate)
+	</insert>
+	
+	<update id="updateCategory">
+		update category 
+		set category_name = #{categoryName}, 
+			display_type = #{displayType}, 
+			description = #{description} 
+		where category_id = #{categoryId}
+	</update>
+	
+	<delete id="deleteCategory">
+		delete category 
+		where category_id = #{categoryId}
+	</delete>	
+	
+	<delete id="deleteCategoryList">
+		delete category 
+		where blog_id = #{blogId}
+	</delete>
+	
+	<select id="getCategory" resultMap="categoryResult">
+		select * 
+		from category 
+		where category_id = #{categoryId}
+	</select>
+	
+	<select id="getCategoryList" resultMap="categoryResult">
+		select * 
+		from category 
+		where blog_id = #{blogId} 
+		order by created_date desc, modified_date desc
+	</select>
+
+</mapper> 
+

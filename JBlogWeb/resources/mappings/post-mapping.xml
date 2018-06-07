@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+ <mapper namespace="Post">
+ 
+ 	<resultMap type="post" id="postResult">
+		<result property="postId" column="POST_ID"/>
+		<result property="categoryId" column="CATEGORY_ID"/>
+		<result property="blogId" column="BLOG_ID"/>
+		<result property="title" column="TITLE"/>
+		<result property="content" column="CONTENT"/>
+		<result property="createdDate" column="CREATED_DATE"/>
+		<result property="modifiedDate" column="MODIFIED_DATE"/>
+	</resultMap>
+
+ 	<insert id="insertPost">
+		insert into post(post_id, category_id, title, content) 
+		values((select nvl(max(post_id), 0) + 1 from post),
+		#{categoryId},
+		#{title},
+		#{content})
+	</insert>
+	
+	<update id="updatePost">
+		update post 
+		set title = #{title}, 
+			content = #{content}, 
+			category_id = #{categoryId} 
+		where post_id = #{postId}
+	</update>
+	
+	<delete id="deletePost">
+		delete post 
+		where post_id = #{postId}
+	</delete>	
+	
+	<delete id="deletePostList">
+		delete post 
+		where category_id = #{categoryId}
+	</delete>
+	
+	<select id="getPost" resultMap="postResult">
+		select p.post_id, p.category_id, b.blog_id, p.title, p.content, p.created_date, p.modified_date
+		from blog b, category c, post p 
+		where b.blog_id = c.blog_id 
+		  and c.category_id = p.category_id 
+		  and p.post_id = #{postId}
+	</select>
+	
+	<select id="getPostList" resultMap="postResult">
+		select p.post_id, p.category_id, b.blog_id, p.title, p.content, p.created_date, p.modified_date
+		from blog b, category c, post p 
+		where b.blog_id = c.blog_id 
+		  and c.category_id = p.category_id 
+		<if test="categoryId != null">
+		  and p.category_id like '%'||#{categoryId}||'%' 
+		</if>	
+		<if test="categoryId == null">
+		  and b.blog_id = #{blogId}
+		</if>	
+		order by p.created_date desc, p.modified_date desc
+	</select>
+
+</mapper> 
+

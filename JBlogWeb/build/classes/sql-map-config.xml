@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <!DOCTYPE configuration 
+     PUBLIC "-//mybatis.org//DTD Config 3.0//EN" 
+     "http://mybatis.org/dtd/mybatis-3-config.dtd">
+     
+<configuration>
+	
+	<typeAliases>
+		<typeAlias alias="user" type="com.multicampus.biz.user.UserVO" />
+		<typeAlias alias="blog" type="com.multicampus.biz.blog.BlogVO" />
+		<typeAlias alias="category" type="com.multicampus.biz.category.CategoryVO" />
+		<typeAlias alias="post" type="com.multicampus.biz.post.PostVO" />
+	</typeAliases>
+	
+	<mappers>
+		<mapper resource="mappings/user-mapping.xml" />
+		<mapper resource="mappings/blog-mapping.xml" />
+		<mapper resource="mappings/category-mapping.xml" />
+		<mapper resource="mappings/post-mapping.xml" />
+	</mappers>
+</configuration> 
